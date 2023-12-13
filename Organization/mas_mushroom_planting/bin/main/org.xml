@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet href="http://moise.sourceforge.net/xml/os.xsl" type="text/xsl" ?>
+
+<organisational-specification
+    
+    id="mushBreed"
+    os-version="0.8"
+
+    xmlns='http://moise.sourceforge.net/os'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://moise.sourceforge.net/os
+                        http://moise.sourceforge.net/xml/os.xsd' >
+
+	<structural-specification>
+	
+		<role-definitions>
+			<role id="pOwner"></role>
+		    <role id="manager"></role>
+		    <role id="hlthCtrl"></role>
+		    <role id="cndCare"></role>
+		    <role id="worker"></role>
+		    <role id="expert"></role>
+		  <!-- <role id="initiator"><extends role="manager"/></role>
+		    <role id="dayChanger"><extends role="manager"/></role> -->
+		</role-definitions>
+
+		<group-specification id="depotGr">
+		    <roles>
+		     <!--  <role id="manager" min="1" max="1"/> -->
+		        <role id="hlthCtrl" min="1" max="2"/>
+		        <role id="cndCare" min="1" max="1"/>
+		        <role id="worker" min="1" max="5"/>
+			    <role id="expert" min="1" max="3"/>
+			    <role id="pOwner" min="1" max="1"/>
+			    <role id="manager" min="1" max="1"/>
+		    </roles>
+		
+		    <links>
+		    	<link from="pOwner" to="manager" type="communication" scope="intra-group" bi-dir="true"/>
+		       	<link from="manager" to="expert" type="communication" scope="intra-group" bi-dir="true"/>
+		   		<link from="manager" to="hlthCtrl" type="communication" scope="intra-group" bi-dir="true"/>
+		       	<link from="manager" to="cndCare" type="communication" scope="intra-group" bi-dir="true"/>
+		       	<link from="expert" to="hlthCtrl" type="communication" scope="intra-group" bi-dir="true"/>
+		       	<link from="expert" to="worker" type="communication" scope="intra-group" bi-dir="true"/>
+	       		<link from="expert" to="cndCare" type="communication" scope="intra-group" bi-dir="true"/>
+		    </links>
+		    <formation-constraints>
+		      <!--  <compatibility from="initiator" to="dayChanger" /> -->
+		    </formation-constraints>
+		</group-specification>
+	</structural-specification>
+
+
+
+	<functional-specification>
+	    <scheme id="depotSch">
+	        <goal id="mushBreed" ttf="5 seconds">
+	            <plan operator="sequence">
+	                <goal id="beginn" ds="start every agent must do their duty"></goal>
+	                <goal id="clean" ds="disinfect the hall"></goal>
+	                <goal id="moderate" ds="moderate the hall temperature and humidity">
+	               <!-- <argument id="Temp"/><argument id="Humid"/> --></goal>
+	                <goal id="placeCompost" ds="place the compost into the hall"></goal>
+	                <goal id="changeStatus" ds="change the status of compost"></goal>
+		  			<goal id="dayChange" ds="days change and related ">
+		  			<!--	<plan operator="sequence">
+		  					<goal id="checkTask" ds="check the tasks that every agent must do"></goal>
+		  				</plan> -->
+		  			</goal>             
+	            </plan>
+	        </goal>
+	
+			<mission id="mBeginn" min="1" max="1"><goal id="beginn"/></mission>
+			<mission id="mClean" min="1" max="2"><goal id="clean"/></mission>
+	        <mission id="mModerate" min="1" max="1"><goal id="moderate"/></mission>
+	        <mission id="mPlaceCompost" min="1" max="5"><goal id="placeCompost"/></mission>
+	        <mission id="mChangeStatus" min="1" max="1"><goal id="changeStatus"/></mission>
+	        <mission id="mDayChange" min="1" max="1"><goal id="dayChange"/>
+	        	<goal id="mushBreed"/></mission>
+	        
+	    </scheme>
+	</functional-specification>
+
+
+	<normative-specification>
+	    <norm id="nMngBeginn" type="obligation" role="pOwner" mission="mBeginn" time-constraint="1 day"/>
+	    <norm id="nHltClean" type="obligation" role="hlthCtrl" mission="mClean" time-constraint="1 day"/>
+		<norm id="nCndModerate" type="obligation" role="cndCare" mission="mModerate" time-constraint="1 day"/>
+	    <norm id="nWrkPlaceCompost" type="obligation" role="worker" mission="mPlaceCompost" time-constraint="1 day"/>
+	    <norm id="nExpChangeStatus" type="obligation" role="expert" mission="mChangeStatus" time-constraint="1 day"/>
+	    <norm id="nDayChange" type="obligation" role="manager" mission="mDayChange" time-constraint="60 day"/>
+	</normative-specification>
+
+</organisational-specification>

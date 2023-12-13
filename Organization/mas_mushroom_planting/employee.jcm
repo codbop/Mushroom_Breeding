@@ -1,0 +1,54 @@
+/* 
+    org_step1
+    ---------------------------
+
+    JaCaMo Project File
+    
+    This file defines the initial state of the MAS (initial agents, environment, organisation, ....)
+    
+    (see jacamo/doc/jcm.html for more information about what can be defined in this file)
+    
+    JaCaMo <VERSION>
+    <DATE>
+*/
+
+mas employee {
+	
+	agent manager: manager.asl {
+		instances: 1
+	}
+	
+    agent expert: expert.asl {
+    	join: depot @ servernode
+    	roles: expert in depot_org.depot_gr @servernode
+    }
+   
+    agent healthCare: healthCare.asl {
+    	join: depot @ servernode
+    	roles: hlthCtrl in depot_org.depot_gr @servernode
+    }
+    
+	agent conditionCare: conditionCare.asl {
+    	join: depot @ servernode
+    	roles: cndCare in depot_org.depot_gr @servernode
+    }
+
+	agent worker: worker.asl {
+    	join: depot @ servernode
+    	roles: worker in depot_org.depot_gr @servernode
+    }
+    
+    /*agent pOwner: projOwner {
+    	join: depot @ servernode
+    	roles: pOwner in depot_org.depot_gr @servernode
+    }*/
+    // java class path
+    class-path:  lib
+   
+    // agent source path
+    asl-path: src/agt
+              src/agt/inc
+
+    platform: cartago()
+    node servernode running @ localhost
+}
